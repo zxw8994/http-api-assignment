@@ -7,6 +7,138 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
+    const handleResponse = (xhr) => {
+        
+        const type = xhr.getResponseHeader('content-type');
+        
+        const content = document.querySelector("#content");
+        
+        var first = true;
+        
+        
+        
+        const h1 = document.createElement('h1');
+        const p = document.createElement('p');
+        
+        
+            const obj = JSON.parse(xhr.response);
+            
+            switch(xhr.status) {
+                case 200:
+                    content.innerHTML= `<h2>Success</h2> <b>Message: This is a successful response.</b>`;
+                    break;
+                case 400:
+                    //content.innerHTML=`<h2>Bad Request</h2><b>Message: Missing valid query parameter set to true.</b>`;
+                    if(type === 'application/json') {
+                        h1.textContent = `${obj.id}`;
+                        p.textContent = `Message: ${obj.message}`;
+                    } else if(type === 'text/xml') {
+                        const message = xhr.responseXML.querySelector('message').textContent;
+                        const id = xhr.responseXML.querySelector('id').textContent;
+		//
+                        h1.textContent = `${id}`;
+                        p.textContent = `Message: ${message}`; 
+                    }
+                    break;
+                case 401:
+                    //content.innerHTML=`<h2>Unauthorized</h2><b>Message: Missing loggedIn query parameter set to yes.</b>`;
+                    if(type === 'application/json') {
+                        h1.textContent = `${obj.id}`;
+                        p.textContent = `Message: ${obj.message}`;
+                    } else if(type === 'text/xml') {
+                        const message = xhr.responseXML.querySelector('message').textContent;
+                        const id = xhr.responseXML.querySelector('id').textContent;
+		//
+                        h1.textContent = `${id}`;
+                        p.textContent = `Message: ${message}`; 
+                    }
+                    break;
+                case 403:
+                    //content.innerHTML=`<h2>Forbidden</h2><b>Message: You do not have access to this content.</b>`;
+                    if(type === 'application/json') {
+                        h1.textContent = `${obj.id}`;
+                        p.textContent = `Message: ${obj.message}`;
+                    } else if(type === 'text/xml') {
+                        const message = xhr.responseXML.querySelector('message').textContent;
+                        const id = xhr.responseXML.querySelector('id').textContent;
+		//
+                        h1.textContent = `${id}`;
+                        p.textContent = `Message: ${message}`; 
+                    }
+                    break;
+                case 500:
+                    //content.innerHTML=`<h2>Internal Server Error</h2><b>Message: Internal Server Error. Something went wrong.</b>`;
+                    if(type === 'application/json') {
+                        h1.textContent = `${obj.id}`;
+                        p.textContent = `Message: ${obj.message}`;
+                    } else if(type === 'text/xml') {
+                        const message = xhr.responseXML.querySelector('message').textContent;
+                        const id = xhr.responseXML.querySelector('id').textContent;
+		//
+                        h1.textContent = `${id}`;
+                        p.textContent = `Message: ${message}`; 
+                    }
+                    break;
+                case 501:
+                    //content.innerHTML=`<h2>Not Implemented</h2><b>Message: A get request for this page has not been implemented yet. Check again later for updated content.</b>`;
+                    if(type === 'application/json') {
+                        h1.textContent = `${obj.id}`;
+                        p.textContent = `Message: ${obj.message}`;
+                    } else if(type === 'text/xml') {
+                        const message = xhr.responseXML.querySelector('message').textContent;
+                        const id = xhr.responseXML.querySelector('id').textContent;
+		//
+                        h1.textContent = `${id}`;
+                        p.textContent = `Message: ${message}`; 
+                    }
+                    break;
+                case 404:
+                    //content.innerHTML=`<h2>Resource Not Found</h2><b>Message: The page you are looking for was not found.</b>`;
+                    if(type === 'application/json') {
+                        h1.textContent = `${obj.id}`;
+                        p.textContent = `Message: ${obj.message}`;
+                    } else if(type === 'text/xml') {
+                        const message = xhr.responseXML.querySelector('message').textContent;
+                        const id = xhr.responseXML.querySelector('id').textContent;
+		//
+                        h1.textContent = `${id}`;
+                        p.textContent = `Message: ${message}`; 
+                    }
+                    break;
+            }
+        
+        
+        content.appendChild(h1);
+        content.appendChild(p);
+    };
+
+    const sendAjax = (url, acceptedType) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        
+        xhr.setRequestHeader("Accept",acceptedType);
+        
+        xhr.onload = () => handleResponse(xhr);
+        //console.log("OK");
+        xhr.send();
+    };
+
+    const getValue = () => {
+        const selectVal = document.getElementById("page").value;
+        const selectType = document.getElementById("type").value;
+        
+        sendAjax(selectVal,selectType);
+    }; 
+
+    const init = () => {
+        const button = document.querySelector("#send");
+        
+        button.addEventListener('click',getValue);  
+    };
+    
+    window.onload = init;
+
+
   </script>
 </head>
 <body>
